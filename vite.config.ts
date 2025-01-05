@@ -4,21 +4,32 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            'chart.js',
+            'react-chartjs-2',
+            '@supabase/supabase-js',
+            'firebase',
+            'firebase-admin'
+          ],
+        },
       },
     },
+  },
+  optimizeDeps: {
+    include: ['@supabase/supabase-js', 'chart.js', 'react-chartjs-2'],
   },
 });
